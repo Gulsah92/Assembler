@@ -15,4 +15,4 @@ class Instruction:
 
 myinst = Instruction()
 
-#print(myinst.getInstCode('STORE'))
+print(myinst.getInstCode('PRINT'))
