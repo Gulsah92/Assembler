@@ -16,10 +16,11 @@ binaries_list = []
 labels = {}
 label_add = 10000
 
+# reads all file and assigns arbitrary memory locations for labels
 for i in asml:
     if ':' in i[0]:
-        labels.update({i[0] : bin(label_add)[2:].zfill(16)})
-
+        labels.update({i[0]: bin(label_add)[2:].zfill(16)})
+        label_add = label_add + 100
 for elem in asml:
     if len(elem) == 2:
         # If the element is not a label or implicit instruction, check access mode and data type based on operand format
@@ -44,13 +45,12 @@ for elem in asml:
             tmpl[2] = bin(int(elem[1][1:5], 16))[2:].zfill(16)
         else:
             tmpl[1] = '11'
-            tmpl[2] = labels[elem[1]+':']
+            tmpl[2] = labels[elem[1] + ':']
     elif ':' in elem[0]:
-        tmpl = ['']*3
+        tmpl = [''] * 3
         tmpl[0] = '1' * 6
         tmpl[1] = '11'
-        tmpl[2] = bin(label_add)[2:].zfill(16)
-        label_add = label_add + 100
+        tmpl[2] = labels[elem[0]]
     elif len(elem) == 1 and elem[0] in instructions_dic.inst_list.keys():
         tmpl = [instructions_dic.getInstCode(elem[0]), '00', '0' * 16]
 
@@ -59,7 +59,7 @@ for elem in asml:
 
 bin_out = open('prog.bin', 'a')
 for bincode in binaries_list:
-    bin_out.write(bincode[0]+bincode[1]+bincode[2]+'\n')
+    bin_out.write(bincode[0] + bincode[1] + bincode[2] + '\n')
 
 bin_out.close()
 for i in binaries_list:
