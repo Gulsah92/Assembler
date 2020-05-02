@@ -1,7 +1,8 @@
 class Instruction:
     # Initialize a dictionary of instructions and their binary representation
-    # Provides a get method to get binary representation of given instruction
+    # Provides a get method to get binary representation of a given instruction
     def __init__(self):
+        # Initialize a instruction and Instruction binary representation dictionary
         self.inst_list = {'HALT':'000001', 'LOAD': '000010', 'STORE': '000011', 'ADD': '000100', 'SUB': '000101', 'INC': '000110',
                           'DEC': '000110', 'MUL': '001000', 'DIV': '001001', 'XOR': '001010','AND': '001011', 'OR':'001100',
                           'NOT': '001101', 'SHL': '001110', 'SHR':'001111', 'NOP': '010000','PUSH': '010001', 'POP': '010010',
@@ -10,5 +11,6 @@ class Instruction:
                           'READ': '100011', 'PRINT': '100100'}
 
     def getInstCode(self, instcode):
+        # Returns binary representation of the given instruction
         return self.inst_list[instcode]
 
