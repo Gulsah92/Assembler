@@ -4,13 +4,13 @@ import string
 import sys
 
 format_check = True
-program_name = sys.argv[0]
-file_path = sys.argv[1]
+# program_name = sys.argv[0]
+# file_path = sys.argv[1]
 
 regs = {'A': '0000000000000001', 'B': '0000000000000010', 'C': '0000000000000011', 'D': '0000000000000100',
         'E': '0000000000000101', 'S': '0000000000000110', 'PC': '0000000000000000'}
-asm = open(file_path, 'r')
-#asm = open('test.asm', 'r')
+# asm = open(file_path, 'r')
+asm = open('test.asm', 'r')
 asml = []
 
 instructions_dic = Instructions.Instruction()
@@ -26,17 +26,16 @@ label_add = 10000
 iline = 0
 for i in asml:
     if ':' in i[0]:
-        labels.update({i[0]: bin(iline*3)[2:].zfill(16)})
+        labels.update({i[0]: bin(iline * 3)[2:].zfill(16)})
         label_add = label_add + 100
     iline = iline + 1
-
 
 for elem in asml:
     if len(elem) == 2:
         # If the element is not a label or implicit instruction, check access mode and data type based on operand format
         # based on access mode add access modes binary representation to index 1 in inner list
         tmpl = [instructions_dic.getInstCode(elem[0]), '', '']
-        if elem[1] in 'ABCDES' or elem[1] == 'PC':
+        if elem[1] in 'A B C D E S'.split(' ') or elem[1] == 'PC':
             # check if the operand is a registry, if true get registry's 16bit binary code
             tmpl[1] = '01'
             tmpl[2] = regs[elem[1]]
@@ -54,15 +53,38 @@ for elem in asml:
                 print('Character format error at line: ' + str(asml.index(elem) + 1))
                 format_check = False
                 break
-        elif all(c in string.hexdigits for c in elem[1]) and len(elem[1]) == 4:
-            tmpl[1] = '00'
-            tmpl[2] = bin(int(elem[1], 16))[2:].zfill(16)
-        elif '[' in elem[1] and len(elem[1]) == 3:
-            tmpl[1] = '10'
-            tmpl[2] = regs[elem[1][1]]
-        elif '[' in elem[1] and len(elem[1]) == 6:
-            tmpl[1] = '11'
-            tmpl[2] = bin(int(elem[1][1:5], 16))[2:].zfill(16)
+        elif all(c in string.hexdigits for c in elem[1]):
+            if len(elem[1]) == 4:
+                tmpl[1] = '00'
+                tmpl[2] = bin(int(elem[1], 16))[2:].zfill(16)
+            else:
+                print('Hexadecimal format error at line :' + str(asml.index(elem) + 1))
+                format_check = False
+                break
+        elif '[' in elem[1]:
+            if '[' == elem[1][0] and ']' == elem[1][2] and len(elem[1]) == 3:
+                tmpl[1] = '10'
+                try:
+                    tmpl[2] = regs[elem[1][1]]
+                except:
+                    print('Unknown registry name at line :' + str(asml.index(elem) + 1))
+                    format_check = False
+                    break
+            elif '[' == elem[1][0] and ']' == elem[1][-1] and len(elem[1]) == 6:
+                tmpl[1] = '11'
+                tmpl[2] = bin(int(elem[1][1:5], 16))[2:].zfill(16)
+            elif '[' == elem[1][0] and ']' == elem[1][3] and len(elem[1]) == 4:
+                tmpl[1] = '10'
+                try:
+                    tmpl[2] = regs[elem[1][1:3]]
+                except:
+                    print('Unknown registry name at line :' + str(asml.index(elem) + 1))
+                    format_check = False
+                    break
+            else:
+                print('Memory addressing error at line: ' + str(asml.index(elem) + 1))
+                format_check = False
+                break
         else:
             tmpl[1] = '00'
             tmpl[2] = labels[elem[1] + ':']
