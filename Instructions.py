@@ -12,7 +12,3 @@ class Instruction:
     def getInstCode(self, instcode):
         return self.inst_list[instcode]
 
-
-myinst = Instruction()
-
-print(myinst.getInstCode('PRINT'))

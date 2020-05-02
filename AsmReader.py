@@ -1,10 +1,14 @@
 import Instructions
 import re
 import string
+import sys
+
+program_name = sys.argv[0]
+file_path = sys.argv[1]
 
 regs = {'A': '0000000000000001', 'B': '0000000000000010', 'C': '0000000000000011', 'D': '0000000000000100',
         'E': '0000000000000101', 'S': '0000000000000110', 'PC': '0000000000000000'}
-asm = open('C:\\Users\\semih\\OneDrive\\Desktop\\test.asm', 'r')
+asm = open(file_path, 'r')
 asml = []
 
 instructions_dic = Instructions.Instruction()
@@ -54,7 +58,6 @@ for elem in asml:
     elif len(elem) == 1 and elem[0] in instructions_dic.inst_list.keys():
         tmpl = [instructions_dic.getInstCode(elem[0]), '00', '0' * 16]
 
-    # tmpl.append(elem[1])
     binaries_list.append(tmpl)
 
 bin_out = open('prog.bin', 'a')
