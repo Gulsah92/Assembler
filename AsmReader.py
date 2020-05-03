@@ -53,7 +53,7 @@ labels = {}
 # in the code file, add label name and labels binary value to labels dictionary
 for i in asml:
     if ':' == i[0][-1] and len(i) == 1:
-        labels.update({i[0]: bin(asml.index(i) * 3)[2:].zfill(16)})
+        labels.update({i[0]: bin(asml.index(i))[2:].zfill(16)})
 
 # Check syntax each code lines and convert it to binary accordingly
 for elem in asml:
