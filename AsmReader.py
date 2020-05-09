@@ -94,15 +94,19 @@ for elem in asml:
                     break
             # Check if operand is all hex characters
             elif all(c in string.hexdigits for c in elem[1]):
-                # If operand is 4 character hex code convert it to 16 bit binary, and set addressing mode to immediate
-                if len(elem[1]) == 4:
-                    tmpl[1] = '00'
-                    tmpl[2] = bin(int(elem[1], 16))[2:].zfill(16)
-                # Else throw Hex format exception
+                # If operand is 4 character hex code and smaller than 32768 convert it to 16 bit binary 2s complement,
+                # and set addressing mode to immediate
+                if int(elem[1], 16) < 32768:
+                    if len(elem[1]) == 4:
+                        tmpl[1] = '00'
+                        tmpl[2] = '0' + bin(int(elem[1], 16))[2:].zfill(15)
+                    # Else throw Hex format exception
+                    else:
+                        print('Hexadecimal format error at line :' + str(asml.index(elem) + 1))
+                        format_check = False
+                        break
                 else:
-                    print('Hexadecimal format error at line :' + str(asml.index(elem) + 1))
-                    format_check = False
-                    break
+                    print('Hexadecimal number overflow error at line :' + str(asml.index(elem) + 1))
             # Check if operand is a memory address
             elif '[' == elem[1][0] and ']' == elem[1][-1]:
                 # Check if operand is a register given as memory address, set addressing mode to indirect memory
@@ -133,7 +137,7 @@ for elem in asml:
                     print('Memory addressing error at line: ' + str(asml.index(elem) + 1))
                     format_check = False
                     break
-            # If operand does not fit other conditions, check if it is a defined label, ıf true set operand value to
+            # If operand does not fit other conditions, check if it is a defined label, if true set operand value to
             # label value, otherwise throw 'undefined label' error
             else:
                 tmpl[1] = '00'
