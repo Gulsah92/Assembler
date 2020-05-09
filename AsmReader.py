@@ -51,9 +51,11 @@ labels = {}
 
 # Check code file for labels, assign a binary value to label according to its line number
 # in the code file, add label name and labels binary value to labels dictionary
+label_count = 0
 for i in asml:
     if ':' == i[0][-1] and len(i) == 1:
-        labels.update({i[0]: bin((asml.index(i))*3)[2:].zfill(16)})
+        labels.update({i[0]: bin((asml.index(i) - label_count)*3)[2:].zfill(16)})
+        label_count = label_count + 1
 
 # Check syntax each code lines and convert it to binary accordingly
 for elem in asml:
