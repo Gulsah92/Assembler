@@ -39,7 +39,7 @@ instructions_dic = Instructions.Instruction()
 # For every line in code file, remove new line characters split lines as single words
 # append every line as a list of words to asml list
 for line in asm:
-    line = line.split('\n')
+    line = line.strip().split('\n')
     asml.append(line[0].split(' '))
 asm.close()
 
