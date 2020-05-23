@@ -151,10 +151,11 @@ for elem in asml:
                     break
         # If code line is a single word that ends with ':', set it as a label, set label value to operand
         elif ':' == elem[0][-1] and len(elem) == 1:
-            tmpl = [''] * 3
-            tmpl[0] = '1' * 6
-            tmpl[1] = '11'
-            tmpl[2] = labels[elem[0]]
+            # tmpl = [''] * 3
+            # tmpl[0] = '1' * 6
+            # tmpl[1] = '11'
+            # tmpl[2] = labels[elem[0]]
+            pass
         # If line is a single word that is in instructions dictionary, look up its binary value an set to opcode fill
         # addressing mode and operand with zeros
         elif len(elem) == 1 and elem[0] in instructions_dic.inst_list.keys():
