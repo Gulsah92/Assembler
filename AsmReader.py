@@ -98,7 +98,7 @@ for elem in asml:
             elif all(c in string.hexdigits for c in elem[1]):
                 # If operand is 4 character hex code and smaller than 32768 convert it to 16 bit binary 2s complement,
                 # and set addressing mode to immediate
-                if int(elem[1], 16) < 2**16-1:
+                if int(elem[1], 16) < 2**15-1:
                     if len(elem[1]) == 4:
                         tmpl[1] = '00'
                         tmpl[2] = '0' + bin(int(elem[1], 16))[2:].zfill(15)
