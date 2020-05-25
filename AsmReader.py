@@ -98,7 +98,7 @@ for elem in asml:
             elif all(c in string.hexdigits for c in elem[1]):
                 # If operand is 4 character hex code and smaller than 32768 convert it to 16 bit binary 2s complement,
                 # and set addressing mode to immediate
-                if int(elem[1], 16) < 32768:
+                if int(elem[1], 16) < 2**16-1:
                     if len(elem[1]) == 4:
                         tmpl[1] = '00'
                         tmpl[2] = '0' + bin(int(elem[1], 16))[2:].zfill(15)
@@ -149,13 +149,9 @@ for elem in asml:
                     print('Label "' + elem[1] + '" is not defined. Line :' + str(asml.index(elem) + 1))
                     format_check = False
                     break
-        # If code line is a single word that ends with ':', set it as a label, set label value to operand
+        # If code line is a single word that ends with ':' (label), skip
         elif ':' == elem[0][-1] and len(elem) == 1:
-            # tmpl = [''] * 3
-            # tmpl[0] = '1' * 6
-            # tmpl[1] = '11'
-            # tmpl[2] = labels[elem[0]]
-            pass
+            continue
         # If line is a single word that is in instructions dictionary, look up its binary value an set to opcode fill
         # addressing mode and operand with zeros
         elif len(elem) == 1 and elem[0] in instructions_dic.inst_list.keys():
