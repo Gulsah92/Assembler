@@ -175,8 +175,7 @@ if format_check:
         bin_out.write(bincode[0] + bincode[1] + bincode[2] + '\n')
 
     bin_out.close()
-    for i in binaries_list:
-        print(i)
+    print(file_name + '.bin created.')
 # Throw warning if file could not be created
 else:
     print('File could not be assembled!')
